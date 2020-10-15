@@ -1,5 +1,5 @@
 from django.db import models
-from .base import KFIDField, Base, NOT_REPORTED
+from .base import KFIDField, kf_id_generator, Base, NOT_REPORTED
 
 
 
