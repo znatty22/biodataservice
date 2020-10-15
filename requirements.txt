@@ -3,3 +3,6 @@ django-filter
 autopep8
 base32-crockford==0.3.0
 djangorestframework
+factory_boy
+django-extensions
+pygraphviz
