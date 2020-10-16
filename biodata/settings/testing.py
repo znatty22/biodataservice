@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = 'orq*pze8e8uv*yhkqta0-)s(yj@jcj+kjvc(_k$r8%kf5t3d$c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -53,7 +53,12 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'biodata.api.pagination.CustomPagination',
+    'PAGE_SIZE': 100
 }
 
 ROOT_URLCONF = 'biodata.urls'
