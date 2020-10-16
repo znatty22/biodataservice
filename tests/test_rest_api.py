@@ -14,6 +14,9 @@ def get_kf_id(model_cls):
     [
         ('/studies/', COUNTS[m.Study]),
         ('/participants/', COUNTS[m.Study] * COUNTS[m.Participant]),
+        ('/biospecimens/', (
+            COUNTS[m.Study] * COUNTS[m.Participant] * COUNTS[m.Biospecimen]
+        )),
     ]
 )
 def test_api_get(api_client, endpoint, expected_count):
@@ -38,6 +41,7 @@ def test_api_get(api_client, endpoint, expected_count):
     [
         ('/studies/', COUNTS[m.Study], {'short_name': 'foobaz'}),
         ('/participants/', COUNTS[m.Participant], {'gender': 'Female'}),
+        ('/biospecimens/', COUNTS[m.Biospecimen], {'analyte_type': 'DNA'}),
     ]
 
 
@@ -69,11 +73,15 @@ def test_api_patch(api_client, endpoint, expected_count, update_fields):
             'race': 'Asian',
             'study': lambda: get_kf_id(m.Study)
         }),
+        ('/biospecimens/', {
+            'analyte_type': 'RNA',
+            'participant': lambda: get_kf_id(m.Participant)
+        }),
     ]
 )
 def test_api_post(api_client, endpoint, update_fields):
     """
-    Test API POST 
+    Test API POST
     """
     count_before = len(api_client.get(endpoint).json())
     for k, v in update_fields.items():
@@ -89,12 +97,13 @@ def test_api_post(api_client, endpoint, update_fields):
     assert (count_before + 1) == count_after
 
 
-@pytest.mark.django_db
-@pytest.mark.parametrize(
+@ pytest.mark.django_db
+@ pytest.mark.parametrize(
     'endpoint',
     [
         ('/studies/'),
         ('/participants/'),
+        ('/biospecimens/'),
     ]
 )
 def test_api_delete(api_client, endpoint):

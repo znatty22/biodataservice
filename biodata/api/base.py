@@ -59,3 +59,7 @@ class Base(models.Model):
     def save(self, *args, **kwargs):
         self.modified = timezone.now()
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.kf_id
+

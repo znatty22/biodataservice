@@ -1,42 +1,60 @@
 import factory
 import factory.fuzzy
 
-from .models import PREFIX_DICT, Study, Participant
+from biodata.api import models as m
 from .base import kf_id_generator
 
 COUNTS = {
-    Study: 10,
-    Participant: 10,
+    m.Study: 10,
+    m.Participant: 3,
+    m.Biospecimen: 2,
 }
+
+
+class BiospecimenFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = m.Biospecimen
+
+    kf_id = factory.LazyAttribute(
+        lambda study_id:
+        kf_id_generator(m.PREFIX_DICT['biospecimen'])
+    )
+    analyte_type = factory.fuzzy.FuzzyChoice(m.Biospecimen.ANALYTE)
 
 
 class ParticipantFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = Participant
+        model = m.Participant
 
     kf_id = factory.LazyAttribute(
         lambda study_id:
-        kf_id_generator(PREFIX_DICT['participant'])
+        kf_id_generator(m.PREFIX_DICT['participant'])
     )
-    gender = factory.fuzzy.FuzzyChoice(Participant.GENDER)
-    race = factory.fuzzy.FuzzyChoice(Participant.RACE)
-    ethnicity = factory.fuzzy.FuzzyChoice(Participant.ETHNICITY)
+    gender = factory.fuzzy.FuzzyChoice(m.Participant.GENDER)
+    race = factory.fuzzy.FuzzyChoice(m.Participant.RACE)
+    ethnicity = factory.fuzzy.FuzzyChoice(m.Participant.ETHNICITY)
+    biospecimens = factory.RelatedFactoryList(
+        BiospecimenFactory,
+        size=COUNTS[m.Biospecimen],
+        factory_related_name='participant'
+    )
 
 
 class StudyFactory(factory.django.DjangoModelFactory):
 
     class Meta:
-        model = Study
+        model = m.Study
 
     kf_id = factory.LazyAttribute(
         lambda study_id:
-        kf_id_generator(PREFIX_DICT['study'])
+        kf_id_generator(m.PREFIX_DICT['study'])
     )
-    short_name = factory.Sequence(lambda n: f'Study-{n}')
-    name = factory.Sequence(lambda n: f'Long Name for Study-{n}')
+    short_name = factory.Sequence(lambda n: f'm.Study-{n}')
+    name = factory.Sequence(lambda n: f'Long Name for m.Study-{n}')
     participants = factory.RelatedFactoryList(
         ParticipantFactory,
-        size=COUNTS[Study],
+        size=COUNTS[m.Participant],
         factory_related_name='study'
     )

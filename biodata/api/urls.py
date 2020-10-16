@@ -7,6 +7,7 @@ from biodata.api import views
 router = DefaultRouter()
 router.register(r'studies', views.StudyViewSet)
 router.register(r'participants', views.ParticipantViewSet)
+router.register(r'biospecimens', views.BiospecimenViewSet)
 
 
 # The API URLs are now determined automatically by the router.

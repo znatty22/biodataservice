@@ -16,15 +16,16 @@ def participant_id():
     return kf_id_generator(PREFIX_DICT['participant'])
 
 
+def biospecimen_id():
+    return kf_id_generator(PREFIX_DICT['biospecimen'])
+
+
 class Study(Base):
     kf_id = KFIDField(default=study_id)
     short_name = models.CharField(max_length=25)
     name = models.CharField(
         max_length=100, blank=True, default=NOT_REPORTED
     )
-
-    def __str__(self):
-        return self.kf_id
 
 
 class Participant(Base):
@@ -59,4 +60,19 @@ class Participant(Base):
         max_length=50,
         null=True
     )
-    study = models.ForeignKey(Study, related_name='participants', on_delete=models.CASCADE)
+    study = models.ForeignKey(
+        Study, related_name='participants', on_delete=models.CASCADE
+    )
+
+
+class Biospecimen(Base):
+    ANALYTE = {'DNA', 'RNA', 'Other'}
+    ANALYTE_CHOICES = [(c, c) for c in ANALYTE]
+    kf_id = KFIDField(default=participant_id)
+    analyte_type = models.CharField(
+        choices=ANALYTE_CHOICES,
+        default=NOT_REPORTED,
+        max_length=50,
+    )
+    participant = models.ForeignKey(
+        Participant, related_name='biospecimens', on_delete=models.CASCADE)

@@ -5,7 +5,6 @@ COMMON_FIELDS = ['kf_id', 'created', 'modified']
 
 
 class StudySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = m.Study
         fields = COMMON_FIELDS + ['name', 'short_name', 'participants']
@@ -13,9 +12,16 @@ class StudySerializer(serializers.ModelSerializer):
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = m.Participant
         fields = COMMON_FIELDS + [
-            'gender', 'race', 'ethnicity', 'study',
+            'gender', 'race', 'ethnicity', 'study', 'biospecimens',
+        ]
+        read_only_fields = ['biospecimens']
+
+class BiospecimenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = m.Biospecimen
+        fields = COMMON_FIELDS + [
+            'analyte_type', 'participant',
         ]
