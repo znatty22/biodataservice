@@ -21,6 +21,9 @@ def biospecimen_id():
 
 
 class Study(Base):
+    """
+    A research effort studying a particular rare disease 
+    """
     kf_id = KFIDField(default=study_id)
     short_name = models.CharField(max_length=25)
     name = models.CharField(
@@ -29,6 +32,9 @@ class Study(Base):
 
 
 class Participant(Base):
+    """
+    A research subject participating in a research study
+    """
     GENDER = {'Male', 'Female', 'Other'}
     ETHNICITY = {'Hispanic or Latino',
                  'Not Hispanic or Latino'}
@@ -66,6 +72,9 @@ class Participant(Base):
 
 
 class Biospecimen(Base):
+    """
+    A sample drawn from a research subject participating in a research study
+    """
     ANALYTE = {'DNA', 'RNA', 'Other'}
     ANALYTE_CHOICES = [(c, c) for c in ANALYTE]
     kf_id = KFIDField(default=participant_id)
