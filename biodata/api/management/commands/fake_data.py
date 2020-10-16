@@ -1,9 +1,7 @@
+from pprint import pformat
 from django.core.management.base import BaseCommand, CommandError
 from biodata.api.factory import COUNTS, StudyFactory
 from biodata.api.models import Study
-
-
-DEFAULT_STUDY_COUNT = COUNTS[Study]
 
 
 class Command(BaseCommand):
@@ -13,7 +11,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--study_count',
             type=int,
-            default=DEFAULT_STUDY_COUNT,
+            default=COUNTS[Study],
             help='Delete data before loading',
         )
         parser.add_argument(
@@ -30,12 +28,12 @@ class Command(BaseCommand):
             ))
             Study.objects.all().delete()
 
-        for i in range(options['study_count']):
-            s = StudyFactory()
-            self.stdout.write(self.style.SUCCESS(
-                f'Created study {s}'
-            ))
+        studies = StudyFactory.create_batch(options['study_count'])
+        counts = {
+            typ.__name__: typ.objects.count()
+            for typ in COUNTS
+        }
 
         self.stdout.write(self.style.SUCCESS(
-            f'Successfully loaded {DEFAULT_STUDY_COUNT} studies into database')
-        )
+            f'Successfully loaded fake data:\n{pformat(counts)}'
+        ))

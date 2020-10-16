@@ -1,4 +1,6 @@
 from django.contrib import admin
-from .models import Study
+from biodata.api import models as m
+
 # Register your models here.
-admin.site.register(Study)
+admin.site.register(m.Study)
+admin.site.register(m.Participant)

@@ -1,10 +1,21 @@
 from rest_framework import serializers
-from biodata.api.models import Study
+from biodata.api import models as m
 
-COMMON_FIELDS = ['kf_id', 'url', 'created', 'modified']
+COMMON_FIELDS = ['kf_id', 'created', 'modified']
 
 
-class StudySerializer(serializers.HyperlinkedModelSerializer):
+class StudySerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = Study
-        fields = COMMON_FIELDS + ['name', 'short_name']
+        model = m.Study
+        fields = COMMON_FIELDS + ['name', 'short_name', 'participants']
+        read_only_fields = ['participants']
+
+
+class ParticipantSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = m.Participant
+        fields = COMMON_FIELDS + [
+            'gender', 'race', 'ethnicity', 'study',
+        ]

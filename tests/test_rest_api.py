@@ -1,13 +1,19 @@
 import pytest
 from pprint import pprint
-from biodata.api.models import Study
+from biodata.api import models as m
+from biodata.api.factory import COUNTS
+
+
+def get_kf_id(model_cls):
+    return model_cls.objects.all().first().kf_id
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'endpoint,expected_count',
     [
-        ('/studies/', 10),
+        ('/studies/', COUNTS[m.Study]),
+        ('/participants/', COUNTS[m.Study] * COUNTS[m.Participant]),
     ]
 )
 def test_api_get(api_client, endpoint, expected_count):
@@ -30,7 +36,8 @@ def test_api_get(api_client, endpoint, expected_count):
 @ pytest.mark.parametrize(
     'endpoint,expected_count,update_fields',
     [
-        ('/studies/', 10, {'short_name': 'foobaz'}),
+        ('/studies/', COUNTS[m.Study], {'short_name': 'foobaz'}),
+        ('/participants/', COUNTS[m.Participant], {'gender': 'Female'}),
     ]
 
 
@@ -57,16 +64,23 @@ def test_api_patch(api_client, endpoint, expected_count, update_fields):
     [
         ('/studies/', {'short_name': 'foobaz',
                        'name': 'Long foobaz'}),
+        ('/participants/', {
+            'gender': 'Female',
+            'race': 'Asian',
+            'study': lambda: get_kf_id(m.Study)
+        }),
     ]
-
-
 )
 def test_api_post(api_client, endpoint, update_fields):
     """
     Test API POST 
     """
     count_before = len(api_client.get(endpoint).json())
+    for k, v in update_fields.items():
+        if callable(v):
+            update_fields[k] = v()
     response = api_client.post(endpoint, update_fields)
+    pprint(response.request)
     assert response.status_code == 201
     r = response.json()
     for k, v in update_fields.items():
@@ -80,6 +94,7 @@ def test_api_post(api_client, endpoint, update_fields):
     'endpoint',
     [
         ('/studies/'),
+        ('/participants/'),
     ]
 )
 def test_api_delete(api_client, endpoint):
