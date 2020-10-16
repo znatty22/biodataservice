@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: python:3.7
+    steps:
+      - checkout:
+          path: ~/workdir
+      - run:
+          name: Install dependencies
+          working_directory: ~/workdir
+          command: |
+            pip install -r requirements.txt
+            pip install -r dev-requirements.txt
+      - run:
+          name: Run tests
+          working_directory: ~/workdir
+          command: pytest tests
