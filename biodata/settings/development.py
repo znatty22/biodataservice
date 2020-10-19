@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +25,7 @@ SECRET_KEY = 'orq*pze8e8uv*yhkqta0-)s(yj@jcj+kjvc(_k$r8%kf5t3d$c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -60,6 +60,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'biodata.api.pagination.CustomPagination',
     'PAGE_SIZE': 100
 }
+#
 
 ROOT_URLCONF = 'biodata.urls'
 
@@ -84,13 +85,23 @@ WSGI_APPLICATION = 'biodata.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('PG_NAME', 'postgres'),
+        'USER': os.environ.get('PG_USER', 'postgres'),
+        'PASSWORD': os.environ.get('PG_PASS', 'password'),
+        'HOST': os.environ.get('PG_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('PG_PORT', '5432'),
     }
 }
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+# }
 
 
 # Password validation
