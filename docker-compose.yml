@@ -1,0 +1,23 @@
+version: "3.4"
+   
+services:
+  db:
+    image: postgres:11.1
+    env_file:
+      - docker.env
+    ports:
+      - "5432:5432"
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - docker.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-biodata.settings.testing}
+    depends_on:
+      - db
+
+
