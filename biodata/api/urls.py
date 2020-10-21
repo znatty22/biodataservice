@@ -13,6 +13,7 @@ router.register(r'biospecimens', api_views.BiospecimenViewSet)
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     path('', include(router.urls)),
-    path('health-check', other.health_check)
+    path('health-check', other.health_check),
+    path('summary/<str:study_id>', other.summary)
 ]
 url_patterns = format_suffix_patterns(urlpatterns)
