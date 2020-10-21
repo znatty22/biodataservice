@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_extensions',
-    'biodata.api'
+    'biodata.api',
+    'django_rq',
+
 ]
 
 MIDDLEWARE = [
@@ -61,7 +63,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100
 }
 #
-
 ROOT_URLCONF = 'biodata.urls'
 
 TEMPLATES = [
@@ -82,6 +83,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'biodata.wsgi.application'
 
+redis_host = os.environ.get('REDIS_HOST', '127.0.0.1')
+redis_port = os.environ.get('REDIS_PORT', 6379)
+redis_pw = os.environ.get('REDIS_PASS')
+RQ_QUEUES = {
+    'biodataservice': {
+        'HOST': redis_host,
+        'PORT': redis_port,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 30,
+    },
+    'default': {
+        'HOST': redis_host,
+        'PORT': redis_port,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 30,
+    },
+}
+if redis_pw:
+    RQ_QUEUES['biodataservice']['PASSWORD'] = redis_pw
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'biodata.api'
+    'biodata.api',
+    'django_rq',
 ]
 
 REST_FRAMEWORK = {
