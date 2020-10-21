@@ -19,5 +19,27 @@ services:
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-biodata.settings.testing}
     depends_on:
       - db
+      - redis
 
+  redis:
+    image: redis
+    env_file:
+      - docker.env
+    ports:
+      - "6379:6379"
+
+  worker:
+    build: .
+    volumes:
+      - .:/app
+    env_file:
+      - docker.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-biodata.settings.testing}
+    command: '/app/bin/worker.sh'
+    depends_on:
+      - db
+      - web
+      - redis
+    
 
