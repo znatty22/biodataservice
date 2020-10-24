@@ -1,5 +1,6 @@
 base32_crockford==0.3.0
 Django==3.1.2
+graphene-django
 pytest==6.1.1
 djangorestframework==3.12.1
 psycopg2-binary==2.8.6
