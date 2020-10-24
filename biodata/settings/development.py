@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'biodata.api',
     'django_rq',
-
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'biodata.api.pagination.CustomPagination',
     'PAGE_SIZE': 100
 }
-#
+GRAPHENE = {
+    "SCHEMA": "biodata.api.schema.schema"
+}
+
 ROOT_URLCONF = 'biodata.urls'
 
 TEMPLATES = [
