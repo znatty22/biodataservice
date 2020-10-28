@@ -27,7 +27,7 @@ class Study(Base):
     kf_id = KFIDField(default=study_id)
     short_name = models.CharField(max_length=25)
     name = models.CharField(
-        max_length=100, blank=True, default=NOT_REPORTED
+        max_length=100, blank=True, null=True, default=NOT_REPORTED
     )
 
 
@@ -77,7 +77,7 @@ class Biospecimen(Base):
     """
     ANALYTE = {'DNA', 'RNA', 'Other'}
     ANALYTE_CHOICES = [(c, c) for c in ANALYTE]
-    kf_id = KFIDField(default=participant_id)
+    kf_id = KFIDField(default=biospecimen_id)
     analyte_type = models.CharField(
         choices=ANALYTE_CHOICES,
         default=NOT_REPORTED,

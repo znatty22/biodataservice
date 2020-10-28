@@ -1,6 +1,7 @@
 import pytest
 
 from django.core.management import call_command
+from django.test.client import Client
 
 BASE_URL = 'http://testserver'
 
@@ -16,16 +17,23 @@ def django_db_setup(django_db_setup, django_db_blocker):
 
 
 @pytest.fixture(scope='session')
+def client():
+    return Client(
+        HTTP_CONTENT_TYPE='application/json',
+    )
+
+
+@pytest.fixture(scope='session')
+def requests_client():
+    from rest_framework.test import RequestsClient
+    c = RequestsClient()
+    #c.headers.update({'content_type': 'application/json'})
+    return c
+
+
+@pytest.fixture(scope='session')
 def api_client():
     from rest_framework.test import APIClient
     return APIClient(
         HTTP_CONTENT_TYPE='application/json',
     )
-
-
-@pytest.fixture(scope='function')
-def client():
-    from rest_framework.test import RequestsClient
-    c = RequestsClient()
-    #c.headers.update({'content_type': 'application/json'})
-    return c
